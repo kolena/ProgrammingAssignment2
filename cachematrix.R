@@ -1,15 +1,33 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Programming Assignment #2
+##Caching the inverse of matrix
 
-## Write a short comment describing this function
+## Create a special matrix object
 
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(x = matrix()) { ##define the function argument as matrix on default
+  i<-NULL                                   ##set i, our inverted matrix, which is calculted in cacheSolve, to NULL
+  set<-function(y){
+    x <<- y                                 ##assign the input arg to the object x, which is from "parent" environment
+    i <<- NULL                              ##assign value NULL to the object i from "parent" environment
+  }
+  get <- function() x
+  setinv <- function(inv) i <<- inv
+  getinv <- function () i
+  list(set = set, get = get,                ##assign the functions as elements of the list, so we can call it using $ operator
+       setinv = setinv,
+       getinv = getinv)
+  
 }
 
-
-## Write a short comment describing this function
+## Compute the inverse of a special matrix object
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  i <- x$getinv()                          ##call the function on the input object                
+  if(!is.null(i)){                         ##check is it's NULL or else
+    message("getting cached data")
+    return(i)                              ##if not NULL, return the valid inverse matrix
+  }
+  data <- x$get()                          ##if NULL, calculate the inverse matrix of x
+  i <-solve(data, ...)
+  x$setinv(i)
+  i                                         ##return a matrix that is the inverse of 'x'
 }
